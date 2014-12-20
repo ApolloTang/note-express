@@ -12,8 +12,17 @@ app.all('/', function(req, res, next){
     next(); // without this app.get() and app.post() after will not be executed
 })
 
-app.get('/', function(req, res){
-    res.render('index.jade', {
+
+// each verm method can take multiple callback, just call next() at the end
+// of each method so next callback will be execute
+
+app.get('/'
+    , function(req, res, next){
+        console.log( names );
+        next();
+    }
+    , function(req, res){
+        res.render('index.jade', {
         names: names
     });
 })
