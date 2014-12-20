@@ -6,6 +6,11 @@ app.use(bodyParser.urlencoded()); // <--
 
 var names = [];
 
+var log = function(req, res, next){
+        console.log( names );
+        next();
+    }
+
 app.all('/', function(req, res, next){
     // will run for all CRUD verb
     console.log('from ALL');
@@ -17,10 +22,7 @@ app.all('/', function(req, res, next){
 // of each method so next callback will be execute
 
 app.get('/'
-    , function(req, res, next){
-        console.log( names );
-        next();
-    }
+    , log  // <-- moving the callback offline
     , function(req, res){
         res.render('index.jade', {
         names: names
