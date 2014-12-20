@@ -6,6 +6,12 @@ app.use(bodyParser.urlencoded()); // <--
 
 var names = [];
 
+app.all('/', function(req, res, next){
+    // will run for all CRUD verb
+    console.log('from ALL');
+    next();
+})
+
 app.get('/', function(req, res){
     res.render('index.jade', {
         names: names
