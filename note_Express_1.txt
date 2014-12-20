@@ -1,0 +1,270 @@
+::: Why and What of Express
+
+
+    Some of the things you can do with Express include:
+
+        • JSON-based APIs
+        • Single-page web applications
+        • Real-time web applications
+
+    Some reasons for using a framework like Express include
+
+        • It takes less time to create applications using a framework.
+        • Common patterns, like routing and view layers, are accounted for in
+          a framework like Express, meaning you do not have to write code for
+          this
+        • A framework like Express is actively used, maintained, and tested. The
+          stability of the code can be expected.
+
+    Express are not appropriate for everything. eg., if you Express are not
+    appropriate for creating a command-line script.
+
+    Express supports template engines, routing, and passing data to views
+
+
+::: Install Express
+
+        sudo npm install -g express
+        sudo npm install -g express-generator
+
+        http://stackoverflow.com/questions/20505028/express-doesnt-work-on-ubuntu
+
+::: Generate a skeleton Express site:
+
+        $ express express_eg
+
+           create : express_eg
+           create : express_eg/package.json
+           create : express_eg/app.js
+           create : express_eg/public
+           create : express_eg/public/javascripts
+           create : express_eg/public/images
+           create : express_eg/public/stylesheets
+           create : express_eg/public/stylesheets/style.css
+           create : express_eg/routes
+           create : express_eg/routes/index.js
+           create : express_eg/routes/users.js
+           create : express_eg/views
+           create : express_eg/views/index.jade
+           create : express_eg/views/layout.jade
+           create : express_eg/views/error.jade
+           create : express_eg/bin
+           create : express_eg/bin/www
+
+           install dependencies:
+             $ cd express_eg && npm install
+
+           run the app:
+             $ DEBUG=express_eg ./bin/www
+
+
+
+
+::: Exploring Express ----------------------------------------------------
+
+        Folder structure:
+
+            • app.js
+            • node_modules
+            • package.json
+            • public
+            • routes
+            • views
+
+        app.js
+
+            The application file used to start the application.
+            it contains configuration information for the application.
+
+        node_modules
+
+            node_modules holds any node modules that are defined
+            in package.json and have been installed.
+
+        package.json
+
+            package.json gives information on the
+            application, including the dependencies.
+
+        public
+
+            The public folder serves the application to the web. you
+            will find stylesheets, javascripts, and images in this folder.
+            you will not find any application logic in this folder; this
+            is a common pattern to ensure web application security.
+
+            [*] Anything place in the "public" folder will be served
+
+
+        routes
+
+            Defines the pages that an application should respond to.
+            eg. If you want to have an about page in your application,
+            you need to set up an 'about' route. the routes folder
+            holds these declarations.
+
+        views
+
+            the views folder defines the layouts for the application.
+
+        ** Folder structure is optional
+
+            The express generator creates a suggested layout for an express
+            project. this is just a suggestion, so if your application has
+            specific requirements or your personal preference is different,
+            you can structure express projects however you want.
+
+
+::: Routing in Express ---------------------------------------------------
+
+        Routing is a term for defining the end points for HTTP requests
+        in an application.
+        Routing describes whether and how an application should respond
+        to certain Hypertext Transfer Protocol (HTTP) requests.
+
+        Express uses HTTP verbs to define routes.
+
+        ::: here is how Express respond to GET
+
+            in add.js the following responds with text in body when the URL's
+            path is "/about"
+
+                app.get('/about', function(req, res){
+                  res.send('Hello from the about route!');
+                });
+
+
+        ::: Example of POST
+
+
+            Add a form to the index view in file "index.jade":
+
+                h2 Form example
+                form(method='post', action='/')
+                  fieldset
+                    legend Add a user
+                    p
+                      label First name
+                      input(name='user[first_name]')
+                    p
+                      label Last name
+                      input(name='user[surname]')
+                    p
+                      input(type='submit', value='Save')
+
+            Add a route to receive the POST request in app.js and
+            outputs the data back to the browser.
+
+                app.post('/', function(req, res){
+                  res.send(req.body);
+                });
+
+            express will respond with a http with body:
+
+                <pre style="word-wrap: break-word; white-space: pre-wrap;">
+                    {"user":{"first_name":"fsadf","surname":"dsfad"}}
+                </pre>
+
+
+        ::: Example of Parameters in Routes
+
+        app.get('/users/:id', function(req, res){
+            res.send(':id = ' + req.params.id);
+        });
+
+::: How to organize routes in ./routes folder
+
+        in app.js add the following lines:
+
+            // routes file importing
+            var aNewPage = require('./routes/a-new-page');
+                . . .
+
+            // url path set here
+            app.use('/new', aNewPage);
+
+        Added a new file in routes folder:
+
+            ./routes/a-new-page.js
+
+        content of file 'a-new-page.js'
+
+            var express = require('express');
+            var router = express.Router();
+
+            // [*very important*] url in path below is '/' not '/new'
+            router.get('/', function(req, res) {
+                res.send('this is a new page');
+            });
+
+            module.exports = router;
+
+::: View Rendering (res.render):
+
+        view rendering let you:
+            • send HTML 
+            • Send JSON
+            • Send XML
+
+        Use res.render to render templates
+
+            • including different template engines.
+            • Pass local variables to templates.
+            • Pass local variables to templates.
+            • Use a layout file.
+            • Set the HTTP response code.
+
+        For eg:
+
+            app.get('/', function(req, res){
+              res.render('index.jade', { title: 'My Site' });
+            });
+
+            • The index.jade template found at views/index.jade will be used to render
+              the page.
+            • A local variable of 'title' is passed to the views/index.jade template.
+            • Default layout file views/layout.jade is used.
+
+                To specify a different layout file at at views/custom_layout.jade
+
+                    res.render('page.jade', { layout: 'custom_layout.jade' });
+
+                If you do not want to use a layout file, you can specify it like this:
+
+                    res.render('page.jade', { layout: false });
+
+
+::: Passing data into template:
+
+
+        app.get('/', function(req, res){
+            // You would probably get this data from a data store
+            var user = {
+                first_name: 'Lord',
+                surname: 'Lucan',
+                address: 'I'm not telling!',
+                facebook_friends: '1356200'
+            };
+            // Note how the user object is passed as local variable to the view
+            res.render('index.jade', { title: 'User', user: user  });
+        });
+
+
+        The data is now available to view, so it can be accessed within the views
+        index.jade template.
+
+            h1 Accessing data
+
+            h3 First Name
+            p= user.first_name
+
+            h3 Surname
+            p= user.surname
+
+
+::: Express alterantive
+
+        http://flatironjs.org/
+        https://github.com/mikeal/tako
+        http://geddyjs.org/
+
