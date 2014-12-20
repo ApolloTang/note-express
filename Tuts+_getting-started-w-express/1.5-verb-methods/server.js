@@ -9,7 +9,7 @@ var names = [];
 app.all('/', function(req, res, next){
     // will run for all CRUD verb
     console.log('from ALL');
-    next();
+    next(); // without this app.get() and app.post() after will not be executed
 })
 
 app.get('/', function(req, res){
