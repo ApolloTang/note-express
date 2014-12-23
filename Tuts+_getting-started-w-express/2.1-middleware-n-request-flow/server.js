@@ -10,37 +10,34 @@ var express = require('express'),
 
 
 // app.use is the function use to register middleware,
-// here it is is registering bodyParser middleware.
-app.use(bodyParser.urlencoded());
 
-var names = [];
 
-var log = function(req, res, next){
-        console.log( names );
+//**  third-party middleware
+    app.use(bodyParser.urlencoded( {extended: false} )); // {extended: false}:: see https://github.com/senchalabs/connect
+    // more 3rd-party middleware at
+    // https://github.com/senchalabs/connect
+
+
+//** custom middleware
+    app.use(function (req, res, next){
+        console.log("this will log on every request");
         next();
-    }
-
-app.all('/', function(req, res, next){
-    // will run for all CRUD verb
-    console.log('from ALL');
-    next(); // without this app.get() and app.post() after will not be executed
-})
-
-
-// each verm method can take multiple callback, just call next() at the end
-// of each method so next callback will be execute
-
-app.get('/'
-    , log  // <-- moving the callback offline
-    , function(req, res){
-        res.render('index.jade', {
-        names: names
     });
-})
 
-app.post('/', function(req, res){
-    names.push(req.body.name);
-    res.redirect('/');
-});
+//route function
+    app.get('/route', function(req, res){
+        res.send('this is a route');
+    });
+
+
+// built-in middleware
+    app.use(express.static('./public'));
+    // use for static file like stylesheet or images to send to client
+
 
 app.listen(3000);
+
+
+
+// localhost:3000/route
+// localhost:3000/file.txt
