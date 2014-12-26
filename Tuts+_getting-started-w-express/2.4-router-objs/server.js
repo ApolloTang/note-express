@@ -9,12 +9,23 @@ var express = require('express'),
 //      3. verb/all
 //      4. route
 
-var router = express.Router({
-    // application wide option
-    caseSensitive: false, // same as  app.enable('case sensitive routing'); //  "/hello" !== "/Hello"
-    strict: true          // app.enable("strict routing");  // "/hello" === "/hello/"
-    // above is redundent because it is the default setting
+var router = express.Router();
+
+
+router.use(function(req, res, next) {
+    console.log('router specific middleware');
+    next();
 });
+
+router.get('/', function(req, res){
+    res.send('router home route');
+});
+
+router.route('/test').get(function(req, res){
+    res.send('router test route');
+});
+
+app.use('/', router);
 
 /*
  * // 1. "use" is for middleware
