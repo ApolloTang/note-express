@@ -25,7 +25,11 @@ router.route('/test').get(function(req, res){
     res.send('router test route');
 });
 
-app.use('/', router);
+app.use('/api', router);
+
+// localhost:3000/api/
+// localhost:3000/api/test
+
 
 /*
  * // 1. "use" is for middleware
