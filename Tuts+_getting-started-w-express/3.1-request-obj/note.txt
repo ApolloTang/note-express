@@ -1,0 +1,14 @@
+commonly use request method:
+
+    req.params.ATTR;  // localhost:3000/path/someValue
+    req.query.ATTR;   // localhost:3000/path/?key_1=value_1&key_2&value_2
+    req.body.ATTR;    // require('body-parse'); express.use( require('body-parse').urlencoded() );
+    req.param('ATTR') // ?
+
+    req.route;
+    req.originalUrl;
+
+    req.cookies.ATTR;
+    req.get();    // any header name
+    req.accepts('text/html');  // application/json text/plain
+
